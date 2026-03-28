@@ -4,7 +4,8 @@ from django.http import Http404
 
 def post_list(request):
     posts = Post.objects.all()
-    return render(request, 'blog/index.html', {'posts': posts})
+    return render(request,
+                  'blog/post/list.html', {'posts': posts})
 
 
 def post_detail(request, post_id):
