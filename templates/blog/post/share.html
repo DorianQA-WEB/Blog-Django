@@ -1,0 +1,21 @@
+<!-- Этот шаблон содержит форму для отправки поста по электронной почте и часть для вывода сообщения об успешной отправке -->
+{% extends "blog/base.html" %}
+
+{% block title %}Share a post{% endblock %}
+
+{% block content %}
+    {% if sent %}
+        <h1>E-mail успешно отправлен</h1>
+        <p>
+            '{{ post.title }}' был успешно отправлен на адрес '{{ form.cleaned_data.to }}.'
+        </p>
+        {% else %}
+        <h1>Поделиться "{{ post.title }}" по e-mail</h1>
+        <form method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <input type="submit" value="Отправить">
+        </form>
+    {% endif %}
+    <p><a href="{{ post.get_absolute_url }}">Вернуться к посту</a></p>
+{% endblock %}
