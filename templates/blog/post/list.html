@@ -1,4 +1,6 @@
 {% extends "blog/base.html" %}
+{% load blog_tags %}
+
 {% block title %}WS CreW{% endblock %}
 {% block content %}
     <h1>WS CreW</h1>
@@ -23,7 +25,7 @@
         <p class="date">
             Публикации {{ post.publish }} от {{ post.author }}
         </p>
-        <p>{{ post.body|linebreaks|truncatewords_html:30 }}</p>
+        <p>{{ post.body|markdown|truncatewords_html:30 }}</p>
     {% endfor %}
     {% include 'pagination.html' with page=posts %}
 {% endblock %}

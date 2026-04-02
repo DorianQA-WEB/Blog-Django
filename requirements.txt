@@ -1,1 +1,5 @@
 django-taggit==6.1.0
+pyyaml==6.0.3
+pymdown-extensions==10.21.2
+nh3==0.3.4
+markdown==3.10.2
