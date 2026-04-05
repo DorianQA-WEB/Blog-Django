@@ -67,3 +67,4 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Комментарий от {self.name} к посту {self.post}'
+

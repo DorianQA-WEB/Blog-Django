@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views import generic
 from .forms import SignUpForm, LoginForm
@@ -28,7 +29,7 @@ class SignUpView(generic.CreateView):
 
             username = form.cleaned_data.get('username')
             messages.success(request, f"Успешно создан аккаунт {username}")
-            return redirect('login')
+            return redirect(to='login')
 
         return render(request, self.template_name, {'form': form})
 
@@ -49,3 +50,8 @@ class CustomLoginView(LoginView):
     # В противном случае сеанс браузера будет таким же
     # как время сеанса cookie "SESSION_COOKIE_AGE", определенное в settings.py
         return super(CustomLoginView, self).form_valid(form)
+
+
+@login_required
+def profile(request):
+    return render(request, 'registration/profile.html')
