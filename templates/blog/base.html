@@ -32,8 +32,8 @@
     </form>
     {% else %}
       <p>Вы не авторизованны</p>
-      <a href="{% url 'login' %}">Войти</a>
-      <a href="{% url 'reset_password' %}">Забыли пароль?</a>
+      <p><a href="{% url 'login' %}">Войти</a></p>
+      <p><a href="{% url 'password_reset' %}">Забыли пароль?</a></p>
       {% endif %}
     <hr>
     <h3>Последние публикации</h3>

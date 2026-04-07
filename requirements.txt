@@ -5,3 +5,4 @@ nh3==0.3.4
 markdown==3.10.2
 psycopg-binary==3.3.3
 psycopg==3.3.3
+social-auth-app-django==5.7.0
