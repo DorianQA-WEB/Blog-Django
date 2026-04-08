@@ -8,46 +8,106 @@
     <link href="{% static 'css/blog.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/default.min.css">
     <script src="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/highlight.min.js"></script>
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
 </head>
-<body>
-<div id="content">
-    {% if messages %}
-        {% for message in messages %}
-            {{ message.tags }} {{ message }}
-        {% endfor %}
-    {% endif %}
-    {% block content %}
-    {% endblock %}
-</div>
-  <div id="sidebar">
-    <h2>WS Crew</h2>
-    <p>Блог танцевального коллектива WS Crew.
-        На данный момент {% total_posts %} публикаций.</p>
-    <hr>
-    {% if user.is_authenticated %}
-      Привет, {{ user.username }}!
-    <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <a href="#" onclick="parentNode.submit();">Выйти</a>
-    </form>
-    {% else %}
-      <p>Вы не авторизованны</p>
-      <p><a href="{% url 'login' %}">Войти</a></p>
-      <p><a href="{% url 'password_reset' %}">Забыли пароль?</a></p>
-      {% endif %}
-    <hr>
-    <h3>Последние публикации</h3>
-      {% show_latest_posts 3 %}
-    <h3>Самые комментируемые посты</h3>
-      {% get_most_commented_posts as most_commented_posts %}
-        <ul>
-            {% for post in most_commented_posts %}
-            <li>
-                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-            </li>
-            {% endfor %}
-        </ul>
-  </div>
+<body class="d-flex flex-column min-vh-100">
+<!-- Responsive navbar-->
+<nav class=" navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href='/'>WS Crew Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'users-profile' %}"><img
+                            class="rounded-circle" width="30" src="{{ user.profile.avatar.url }}"/>
+                    {{ user.username }}
+                    </a></li>
+                    <li class="nav=item">
+                        <form action="{% url 'logout' %}" method="post">{% csrf_token %}
+                            <a href="#" class="nav-link" onclick="parentNode.submit();">Выйти</a>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Войти</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Page content-->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="container d-flex align-items-center justify-content-center">
+                        <div class="alert alert-warning alert-dismissible fade show w-50 d-block" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block content %}
+            {% endblock %}
+        </div>
+        <!-- Widgets-->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">WS Crew blog.</div>
+                <div class="card-body">
+                    Публикаций: {% total_posts %} за все время.
+                </div>
+            </div>
+            <!-- Search widget-->
+            <div class="card mb-4">
+                <div class="card-header">Поиск</div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <form action="/search/" method="get" class="input-group">
+                            <input type="text" name="query" class="form-control" placeholder="Найти..."
+                                    required="" id="id_query">
+                            <button class="btn btn-primary" id="button-search" type="submit">Поиск</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Latest posts widget-->
+            <div class="card mb-4">
+                <div class="list-group">
+                    <a class="list-group-item list group-item-action active" aria-current="true">
+                        Последние публикации
+                    </a>
+                    {% show_latest_posts 3 %}
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action active" aria-current="true">
+                        Самые комментируемые посты
+                    </a>
+                    {% get_most_commented_posts as most_commented_posts %}
+                    {% for post in most_commented_posts %}
+                        <a class="list-group-item list-group-item-action"
+                            href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Footer-->
+<footer class="py-5 bg-dark mt-2 mt-auto">
+    <div class="container"><p class="m-0 text-center text-white">
+        Авторские права © предоставлено qa.doriangrey@gmail.com 2026. </p></div>
+</footer>
 <script>hljs.highlightAll();</script>
 </body>
 </html>
