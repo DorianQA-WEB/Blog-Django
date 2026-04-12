@@ -3,21 +3,24 @@
 {% block content %}
     <h2>Зарегистрироваться</h2>
     {% if form.errors %}
-        <div style="display: table; margin: 0 auto; text-algin: left;">
-            {% for key, value in forms.errors.items %}
-                <strong>{{ value }}</strong>
+        <div class="container d-flex align-items-center justify-content-center">
+            <div class="alert alert-warning alert-dismissible fade show w-50 d-block" role="alert">
+            {% for key, value in form.errors.items %}
+                    <strong>{{ value }}</strong>
             {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </div>
     {% endif %}
     <form method="post">
         {% csrf_token %}
-        <p>Никнейм: {{ form.username }}</p>
-        <p>email: {{ form.email }}</p>
-        <p>Имя: {{ form.first_name }}</p>
-        <p>Фамилия: {{ form.last_name }}</p>
-        <p>Пароль: {{ form.password1 }}</p>
-        <p>Подтверждение пароля: {{ form.password2 }}</p>
-        <button type="submit">Зарегистрироваться</button>
+        Никнейм: {{ form.username }}
+        email: {{ form.email }}
+        Имя: {{ form.first_name }}
+        Фамилия: {{ form.last_name }}
+        Пароль: {{ form.password1 }}
+        Подтверждение пароля: {{ form.password2 }}
+        <button type="submit" class="btn btn-primary btn-lg">Зарегистрироваться</button>
     </form>
     <a href="{% url 'login' %}">Уже зарегистрированы? Войти</a>
 {% endblock %}
