@@ -11,11 +11,50 @@
         </p>
         {% else %}
         <h1>Поделиться "{{ post.title }}" по e-mail</h1>
-        <form method="post">
-            {{ form.as_p }}
+        <form method="post" novalidate>
             {% csrf_token %}
-            <input type="submit" value="Отправить">
+
+            <div class="mb-2">
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="text-danger">
+                        {{ form.name.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-2">
+                {{ form.email }}
+                {% if form.email.errors %}}
+                    <div class="text-danger">
+                        {{ form.email.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-2">
+                {{ from.to }}
+                {% if form.to.errors %}
+                    <div class="text-danger">
+                        {{ form.to.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-2">
+                {{ form.comments }}
+                {% if from.commets.errors %}
+                    <div class="text-danger">
+                        {{ form.comments.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <input type="submit" value="Отправить" class="btn btn-primary mb-3">
         </form>
+
     {% endif %}
-    <p><a href="{{ post.get_absolute_url }}">Вернуться к посту</a></p>
+
+<p><a href="{{ post.get_absolute_url }}">Вернуться к посту</a></p>
+
 {% endblock %}
