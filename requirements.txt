@@ -7,3 +7,4 @@ psycopg-binary==3.3.3
 psycopg==3.3.3
 social-auth-app-django==5.7.0
 django-bootstrap5==26.2
+djangorestframework==3.17.1
