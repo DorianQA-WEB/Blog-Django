@@ -6,7 +6,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'id',
-            'autor',
+            'author',
             'title',
             'body',
             'created',
