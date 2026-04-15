@@ -3,6 +3,21 @@ from django.contrib.auth.models import User
 from PIL import Image
 
 
+"""Profile model 
+
+Описание:
+Модель Profile расширяет стандартную модель User одним-ко-одному связью и хранит аватар и биографию.
+
+Поля:
+user (OneToOneField): связь с django.contrib.auth.models.User, on_delete=models.CASCADE.
+avatar (ImageField): изображение профиля, upload_to='profile_images', по умолчанию 'default.jpg'.
+bio (TextField): текст биографии пользователя.
+
+Поведение:
+- str возвращает username связанного пользователя.
+- save() сохраняет модель, затем открывает загруженный файл avatar и при большем размере, чем 100x100,
+уменьшает изображение до минимума 100x100 посредством thumbnail и перезаписывает файл.
+"""
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
