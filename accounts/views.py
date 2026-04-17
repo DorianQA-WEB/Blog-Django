@@ -9,6 +9,15 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 
 class SignUpView(generic.CreateView):
+    """
+    CreateView для регистрации нового пользователя.
+
+        Назначение: отображает форму регистрации и создаёт нового пользователя при отправке валидной формы.
+        Поведение:
+            GET: рендерит форму SignUpForm с начальными данными (self.initial).
+            POST: при валидной форме сохраняет пользователя, добавляет success-сообщение и редиректит на страницу входа.
+            dispatch: перенаправляет аутентифицированных пользователей на 'blog:post_list'.
+        Побочные эффекты: создаёт запись User в БД и выводит сообщение через django.contrib.messages. """
     form_class = SignUpForm
     initial = None # принимает {'key': 'value'}
     template_name = 'registration/signup.html'
@@ -36,6 +45,13 @@ class SignUpView(generic.CreateView):
 
 
 class CustomLoginView(LoginView):
+    """
+    LoginView с поддержкой галочки «Запомнить меня».
+
+        Назначение: выполняет вход пользователя; при снятой галочке remember_me делает сессию сессионной (истекает при закрытии браузера).
+        Поведение:
+            form_valid: если form.cleaned_data['remember_me'] == False, вызывает request.session.set_expiry(0) и помечает сессию как изменённую.
+        Побочные эффекты: изменяет время жизни сессии в зависимости от выбранной опции. """
     form_class = LoginForm
 
     def form_valid(self, form):
@@ -55,6 +71,15 @@ class CustomLoginView(LoginView):
 
 @login_required
 def profile(request):
+    """
+    Защищённый представлением, позволяющее пользователю просматривать и редактировать профиль.
+
+        Назначение: обрабатывает обновление данных User и связанных Profile через UpdateUserForm и UpdateProfileForm.
+        Поведение:
+            Требует аутентификацию (@login_required).
+            POST: валидирует оба формы; при успехе сохраняет их, добавляет success-сообщение и редиректит на 'users-profile'.
+            GET: инициализирует формы текущими данными пользователя и профиля и рендерит шаблон registration/profile.html.
+        Побочные эффекты: обновляет записи User и Profile; может сохранять загруженные файлы (request.FILES). """
     if request.method == "POST":
         user_form = UpdateUserForm(request.POST, instance=request.user)
         profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
@@ -74,6 +99,14 @@ def profile(request):
 
 
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
+    """
+    PasswordChangeView с сообщением об успешной смене пароля.
+
+        Назначение: предоставляет интерфейс смены пароля и перенаправляет на профиль после успешного изменения.
+        Поведение:
+            Показывает шаблон registration/change_password.html.
+            При успешной смене показывает success_message и редиректит на success_url.
+        Побочные эффекты: обновляет пароль пользователя. """
     template_name = 'registration/change_password.html'
     success_message = 'Ваш пароль успешно изменен'
     success_url = reverse_lazy('users-profile')
