@@ -2,6 +2,17 @@ from django import forms
 from .models import Comment
 
 class EmailPostForm(forms.Form):
+    """
+    Форма для отправки поста по электронной почте.
+
+    Позволяет пользователю ввести:
+    - Имя (обязательно)
+    - Свой email (обязательно)
+    - Email получателя (обязательно)
+    - Комментарий (необязательно)
+
+    Используется на странице детального просмотра поста.
+    """
     name = forms.CharField(max_length=25, required=True,
                            widget=forms.TextInput(attrs={'class': 'form-control mb-1', 'placeholder': 'Name'}))
     email = forms.EmailField(required=True,
@@ -26,6 +37,17 @@ class CommentForm(forms.ModelForm):
 
 
 class SearchForm(forms.Form):
+    """
+    Форма для добавления комментария к посту.
+
+    Наследуется от ModelForm, привязана к модели Comment.
+    Пользователь может ввести:
+    - Имя (обязательно)
+    - Email (обязательно)
+    - Текст комментария (обязательно)
+
+    Отображается под каждым постом.
+    """
     query = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form_control mb-1', 'placeholder': 'Enter search term...'}))
 

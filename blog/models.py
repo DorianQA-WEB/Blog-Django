@@ -7,10 +7,43 @@ from taggit.managers import TaggableManager
 
 
 class PublishedManager(models.Manager):
+    """
+    Кастомный менеджер модели Post.
+
+    Фильтрует объекты, возвращая только опубликованные посты.
+    Используется как `Post.published.all()` для получения
+    только тех постов, у которых status='PB' (Published).
+    """
     def get_queryset(self):
         return super().get_queryset().filter(status=Post.Status.PUBLISHED)
 
 class Post(models.Model):
+    """
+    Модель блог-поста.
+
+    Представляет собой статью в блоге с заголовком, содержанием,
+    автором, датой публикации и статусом. Поддерживает теги
+    через django-taggit.
+
+    Атрибуты:
+        title (str): Заголовок поста (до 250 символов)
+        slug (str): URL-дружественное имя, уникальное на дату публикации
+        author (User): Связь с пользователем Django (ForeignKey)
+        body (str): Текст поста
+        publish (datetime): Дата и время публикации
+        created (datetime): Дата и время создания (авто)
+        updated (datetime): Дата и время последнего изменения (авто)
+        status (str): Статус поста — черновик или опубликован
+        tags (TaggableManager): Управление тегами
+            Менеджеры:
+        objects (Manager): Стандартный менеджер
+        published (PublishedManager): Только опубликованные посты
+
+    Индексы:
+        - Индекс по полю `publish` для ускорения сортировки
+
+    Сортировка: по убыванию даты публикации
+    """
     class Status(models.TextChoices):
         DRAFT = 'DF', 'Draft'
         PUBLISHED = 'PB', 'Published'
@@ -38,6 +71,15 @@ class Post(models.Model):
         ]
 
     def get_absolute_url(self):
+        """
+        Возвращает канонический URL для поста.
+
+        Используется в шаблонах и при редиректах после создания/редактирования.
+        Пример: /2026/4/10/my-post/
+
+        Returns:
+            str: Абсолютный URL поста
+        """
         return reverse('blog:post_detail',
                        args=[self.publish.year,
                              self.publish.month,
@@ -49,6 +91,27 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    """
+    Модель комментария к посту.
+
+    Позволяет читателям оставлять комментарии под постами.
+    Поддерживает модерацию через поле `active`.
+
+    Атрибуты:
+        post (Post): Связь с постом (ForeignKey)
+        name (str): Имя комментатора (до 80 символов)
+        email (str): Email комментатора
+        body (str): Текст комментария
+        created (datetime): Дата создания (авто)
+        updated (datetime): Дата обновления (авто)
+        active (bool): Статус активности (по умолчанию True)
+    Мета:
+        ordering: по возрастанию даты создания
+        indexes: индекс по `created` для производительности
+
+    Методы:
+        __str__: Возвращает описание комментария
+    """
     post = models.ForeignKey(Post,
                              on_delete=models.CASCADE,
                              related_name='comments')
