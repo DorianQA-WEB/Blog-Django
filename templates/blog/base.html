@@ -1,3 +1,32 @@
+{% comment %}
+    Базовый шаблон для блога WS Crew.
+
+    Основные функции:
+    - Построение вертикальной верстки через flexbox (d-flex flex-column min-vh-100)
+    - Адаптивная навигация с Bootstrap 5
+    - Поддержка пользовательских тегов: {# total_posts #}, {# show_latest_posts #}, {# get_most_commented_posts #}
+    - Интеграция highlight.js для подсветки кода
+    - Обработка flash-сообщений Django (messages)
+
+    Структура:
+    - Navbar: меню с условной отображением профиля и кнопки выхода для авторизованных
+    - Content: основная область контента (заполняется дочерними шаблонами)
+    - Sidebar: виджеты (статистика, поиск, последние посты, популярные комментарии)
+    - Footer: фиксированный внизу
+
+    Важные примечания:
+    - Используется django-bootstrap5 для упрощённой интеграции Bootstrap
+    - Подключается собственный CSS (blog.css) после Bootstrap для переопределения стилей
+    - highlight.js подключается через CDN (jsdelivr)
+    - Используются теги из blog/templatetags/blog_tags.py
+
+    Возможные проблемы и решения:
+    1. Кнопка "Выйти" не использует тег {% url ... %} → опасно из-за жёсткой привязки к пути
+    2. Проверка url для "Выйти" → нужно использовать 'logout' вместо 'logout' или 'accounts:logout'
+    3. CSS-класс nav=item → опечатка, должно быть nav-item
+    4. Теги {% show_latest_posts %} и {% get_most_commented_posts %} должны быть определены в blog_tags.py
+{% endcomment %}
+
 {% load blog_tags %}
 {% load static %}
 <!DOCTYPE html>
