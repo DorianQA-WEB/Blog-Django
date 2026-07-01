@@ -1,3 +1,6 @@
+'''
+    This file is used to register the apps.py file in the settings.py file.
+'''
 from django.apps import AppConfig
 
 
